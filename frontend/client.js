@@ -1,7 +1,7 @@
 
 
-document.querySelector("button").addEventListener("click", sendData)
-
+document.querySelector(".submit").addEventListener("click", sendData)
+document.querySelector(".getData").addEventListener("click", getData)
 
 
 
@@ -21,7 +21,16 @@ async function sendData(){
         "password": dataTwo
     }
 
-    let response = await axios.post("http://localhost:3000/" , userData )
-    console.log(response.data)
+    let response = await axios.post("http://localhost:3000/signin" , userData )
+    localStorage.setItem('token', response.data.token)
+    
+   
 }
 }
+
+async function getData(){
+    
+}
+
+
+  
