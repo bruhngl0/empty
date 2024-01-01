@@ -16,7 +16,7 @@ const mockData = [
     
 ];
 
-app.post("/", async(req,res)=>{
+app.post("/signin", async (req,res)=>{
     const usernameRecieved = req.body.username
     const passwordRecieved = req.body.password
 
@@ -25,12 +25,33 @@ app.post("/", async(req,res)=>{
         res.json({"message": "user not found"})
     }
     else{
-       const token = await jwt.sign(data.password, secString)
-       res.json(token)
+       const token = await jwt.sign( data.username, secString)
+       res.json( {
+        userName: data.username,
+        token
+       })
     }
     
     
 })
+
+
+app.get("/data", (req, res) => {
+    const tokenWithBearer = req.headers.authorization;
+
+    if (tokenWithBearer && tokenWithBearer.startsWith('Bearer ')) {      
+        const token = tokenWithBearer.slice(7); // "Bearer ".length === 7
+        const decode = jwt.verify(token, secString)
+        
+        const userData = mockData.find((element)=> element.username == decode)
+        if(userData){
+            res.status(200).json(userData)
+        }
+    } else {
+        
+        res.status(401).json({ message: 'Invalid or missing Authorization header' });
+    }
+});
 app.listen(3000, ()=>{
-    console.log("running on port 3000")
+    console.log("running on port 3000 ff")
 })
